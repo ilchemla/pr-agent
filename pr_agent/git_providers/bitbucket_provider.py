@@ -55,6 +55,9 @@ class BitbucketProvider:
         except Exception as e:
             logging.exception(f"Failed to remove temp comments, error: {e}")
 
+    def publish_inline_comment(self, body: str, relevant_file: str, relevant_line_in_file: str):
+        pass
+
     def get_title(self):
         return self.pr.title
 
