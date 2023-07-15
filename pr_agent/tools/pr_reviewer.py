@@ -33,7 +33,6 @@ class PRReviewer:
             "require_tests": settings.pr_reviewer.require_tests_review,
             "require_security": settings.pr_reviewer.require_security_review,
             "require_focused": settings.pr_reviewer.require_focused_review,
-            'extended_code_suggestions': settings.pr_reviewer.extended_code_suggestions,
             'num_code_suggestions': settings.pr_reviewer.num_code_suggestions,
         }
         self.token_handler = TokenHandler(self.git_provider.pr,
@@ -55,6 +54,9 @@ class PRReviewer:
             logging.info('Pushing PR review...')
             self.git_provider.publish_comment(pr_comment)
             self.git_provider.remove_initial_comment()
+            if settings.pr_reviewer.inline_code_comments:
+                logging.info('Pushing inline code comments...')
+                self._publish_inline_code_comments()
         return ""
 
     async def _get_prediction(self):
@@ -86,6 +88,9 @@ class PRReviewer:
                 del data['PR Feedback']['Security concerns']
                 data['PR Analysis']['Security concerns'] = val
 
+        if settings.config.git_provider == 'github' and settings.pr_reviewer.inline_code_comments:
+            del data['PR Feedback']['Code suggestions']
+
         markdown_text = convert_to_markdown(data)
         user = self.git_provider.get_user_id()
 
@@ -104,3 +109,17 @@ class PRReviewer:
         if settings.config.verbosity_level >= 2:
             logging.info(f"Markdown response:\n{markdown_text}")
         return markdown_text
+
+    def _publish_inline_code_comments(self):
+        review = self.prediction.strip()
+        try:
+            data = json.loads(review)
+        except json.decoder.JSONDecodeError:
+            data = try_fix_json(review)
+
+        for d in data['PR Feedback']['Code suggestions']:
+            relevant_file = d['relevant file'].strip()
+            relevant_line_in_file = d['relevant line in file'].strip()
+            content = d['suggestion content']
+
+            self.git_provider.publish_inline_comment(content, relevant_file, relevant_line_in_file)

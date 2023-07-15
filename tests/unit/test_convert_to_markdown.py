@@ -46,7 +46,6 @@ class TestConvertToMarkdown:
     def test_simple_dictionary_input(self):
         input_data = {
             'Main theme': 'Test',
-            'Description and title': 'Test description',
             'Type of PR': 'Test type',
             'Relevant tests added': 'no',
             'Unrelated changes': 'n/a',  # won't be included in the output
@@ -54,14 +53,12 @@ class TestConvertToMarkdown:
             'General PR suggestions': 'general suggestion...',
             'Code suggestions': [
                 {
-                    'Suggestion number': 1,
                     'Code example': {
                         'Before': 'Code before',
                         'After': 'Code after'
                     }
                 },
                 {
-                    'Suggestion number': 2,
                     'Code example': {
                         'Before': 'Code before 2',
                         'After': 'Code after 2'
@@ -71,7 +68,6 @@ class TestConvertToMarkdown:
         }
         expected_output = """\
 - 🎯 **Main theme:** Test
-- 🔍 **Description and title:** Test description
 - 📌 **Type of PR:** Test type
 - 🧪 **Relevant tests added:** no
 - ✨ **Focused PR:** Yes
@@ -110,7 +106,6 @@ class TestConvertToMarkdown:
     def test_dictionary_input_containing_only_empty_dictionaries(self):
         input_data = {
             'Main theme': {},
-            'Description and title': {},
             'Type of PR': {},
             'Relevant tests added': {},
             'Unrelated changes': {},

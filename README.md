@@ -183,7 +183,6 @@ Here is a quick overview of the different sub-tools of PR Reviewer:
 
 - PR Analysis
   - Summarize main theme
-  - PR description and title
   - PR type classification
   - Is the PR covered by relevant tests
   - Is this a focused PR
@@ -199,7 +198,6 @@ This is how a typical output of the PR Reviewer looks like:
 #### PR Analysis
 
 - 🎯 **Main theme:** Adding language extension handler and token handler
-- 🔍 **Description and title:** Yes
 - 📌 **Type of PR:** Enhancement
 - 🧪 **Relevant tests added:** No
 - ✨ **Focused PR:** Yes, the PR is focused on adding two new handlers for language extension and token counting.
@@ -249,45 +247,6 @@ require_focused_review=true
 require_tests_review=true
 require_security_review=true
 ```
-
-#### Code Suggestions configuration:
-
-There are also configuration options to control different aspects of the `code suggestions` feature.
-The number of suggestions provided can be controlled by adjusting the following parameter:
-
-```
-num_code_suggestions=4
-```
-
-You can also enable more verbose and informative mode of code suggestions:
-
-```
-extended_code_suggestions=false
-```
-
-This is a comparison of the regular and extended code suggestions modes:
-
-- **relevant file:** sql.py
-- **suggestion content:** Remove hardcoded sensitive information like username and password. Use environment variables or a secure method to store these values. [important]
-
-Example for extended suggestion:
-
-- **relevant file:** sql.py
-- **suggestion content:** Remove hardcoded sensitive information (username and password) [important]
-- **why:** Hardcoding sensitive information is a security risk. It's better to use environment variables or a secure way to store these values.
-- **code example:**
-  - **before code:**
-    ```
-    user = "root",
-    password = "Mysql@123",
-    ```
-  - **after code:**
-    ```
-    user = os.getenv('DB_USER'),
-    password = os.getenv('DB_PASSWORD'),
-    ```
-
----
 
 ## How it works
 
